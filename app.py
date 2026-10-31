@@ -1,9 +1,10 @@
 import os
+os.environ["TF_USE_LEGACY_KERAS"] = "1"  # load Keras-2 .h5 correctly
 import numpy as np
 import streamlit as st
 from PIL import Image, ImageOps
 
-MODEL_PATH = "KIDNEY-Diseases.h5"
+MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "KIDNEY-Diseases.h5")
 # Same order as train.class_indices in the notebook (alphabetical)
 CLASSES = ["Cyst", "Normal", "Stone", "Tumor"]
 INFO = {
@@ -37,7 +38,12 @@ if not os.path.exists(MODEL_PATH):
     st.error(f"`{MODEL_PATH}` not found. Put it in the same folder as app.py.")
     st.stop()
 
-model = load_model()
+try:
+    model = load_model()
+except Exception as e:
+    st.error("Could not load the model.")
+    st.exception(e)
+    st.stop()
 h, w = model.input_shape[1:3]
 
 files = st.file_uploader(
