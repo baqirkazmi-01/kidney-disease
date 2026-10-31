@@ -1,5 +1,4 @@
 import os
-os.environ["TF_USE_LEGACY_KERAS"] = "1"  # load Keras-2 .h5 correctly
 import numpy as np
 import streamlit as st
 from PIL import Image, ImageOps
@@ -20,8 +19,8 @@ st.set_page_config(page_title="Kidney CT Classifier", page_icon="🩻", layout="
 
 @st.cache_resource(show_spinner="Loading model…")
 def load_model():
-    import tensorflow as tf
-    return tf.keras.models.load_model(MODEL_PATH, compile=False)
+    import keras
+    return keras.models.load_model(MODEL_PATH, compile=False)
 
 
 def preprocess(img: Image.Image, size):
